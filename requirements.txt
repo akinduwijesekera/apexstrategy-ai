@@ -1,0 +1,25 @@
+# Core ML
+torch
+torchvision
+torchaudio
+
+# Data handling
+numpy
+pandas
+scikit-learn
+
+# F1 data
+fastf1
+
+# Reinforcement Learning structure
+gymnasium
+
+# Visualisation
+matplotlib
+plotly
+
+# GUI
+streamlit
+
+# Utilities
+tqdm
