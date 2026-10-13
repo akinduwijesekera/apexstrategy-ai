@@ -1,55 +1,37 @@
-# 🏎️ ApexStrategy AI
+# ApexStrategy AI
 ## Reinforcement Learning-Based Formula 1 Pit Strategy Optimisation
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
 ![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-red.svg)
-![Reinforcement Learning](https://img.shields.io/badge/RL-DQN%20%2F%20DDQN-green.svg)
-![Streamlit](https://img.shields.io/badge/GUI-Streamlit-orange.svg)
-![Status](https://img.shields.io/badge/Status-Research%20Prototype-purple.svg)
+![RL](https://img.shields.io/badge/RL-DQN%20%2F%20DDQN-green.svg)
 
 ---
 
-## 🚀 Overview
+## Overview
 
-ApexStrategy AI is a full end-to-end machine learning system that learns, analyses, and explains Formula 1 pit strategies under realistic race conditions.
-
-The project integrates **real F1 race data**, **sequence modelling**, **reinforcement learning**, **stochastic race-event modelling**, **dynamic weather**, **multi-car opponent simulation**, and **interactive visualisation** to study how AI can optimise race strategy.
+ApexStrategy AI learns Formula 1 pit strategy — when to pit and which tyre compound to select — under realistic, stochastic race conditions, and explains its decisions.
 
 The system combines:
 
-- 📊 Real F1 race data (FastF1, 2023 season)
-- 🔁 LSTM sequence modelling for lap-time prediction
-- 🏎️ Custom multi-car race simulator environment
-- 🧠 Deep Q-Network (DQN) / Double DQN (DDQN) reinforcement learning
-- 🚨 Full neutralisation modelling: Safety Car, Virtual Safety Car, Red Flag
-- 🌧️ Dynamic weather with dry / damp / wet conditions and wet-weather compounds
-- 🏁 Multi-car opponent model with undercut and traffic reward shaping
-- 🗺️ 21 real-circuit presets for cross-circuit generalisation
-- 🏁 FIA tyre-rule enforcement
-- 📈 Brute-force optimal baseline validation
-- 🔬 Ablation and sensitivity studies
-- 🧭 Policy and trace visualisation
-- 🧠 LLM-powered strategy explanation
-- 🖥️ Interactive Streamlit GUI with single-run and multi-run evaluation
+- Real F1 race data (FastF1, 2023 season)
+- An LSTM sequence model for lap-time prediction
+- A custom multi-car race simulator
+- DQN / Double DQN reinforcement learning
+- Safety Car, Virtual Safety Car, and Red Flag modelling
+- Dynamic weather (dry / damp / wet) with compound-specific penalties
+- A rule-based multi-car opponent model with undercut/traffic reward shaping
+- 21 real-circuit presets for cross-circuit generalisation
+- FIA tyre-rule enforcement
+- Brute-force optimal baseline validation
+- Ablation and sensitivity studies
+- An LLM-based strategy explainer
+- An interactive Streamlit GUI
+
+The project started as deterministic single-car pit-stop optimisation and was progressively extended to adaptive strategy under realistic stochastic conditions.
 
 ---
 
-## 🎯 Objective
-
-Learn optimal strategies for:
-
-- **when to pit**
-- **which tyre compound to select**
-
-to minimise **total race time** under realistic constraints.
-
-The agent learns by simulating thousands of races and observing the trade-off between tyre degradation, pit-stop time loss, neutralisation opportunities, weather-driven compound switches, and relative position against opponents.
-
-This project began as deterministic single-car pit-stop optimisation and has been progressively extended into **adaptive strategy under realistic stochastic race conditions**.
-
----
-
-## 🧠 System Architecture
+## System Architecture
 
 ```mermaid
 flowchart LR
@@ -91,7 +73,7 @@ flowchart LR
 
 ---
 
-## 🧩 System Pipeline
+## Pipeline
 
 ```text
 FastF1 Race Data
@@ -113,33 +95,31 @@ Streamlit GUI
 
 ---
 
-## 📊 Results
+## Results
 
-### 🏁 Core Deterministic Results
+### Core Deterministic Results
 
 | Strategy                  | Total Time (s) |
-| ------------------------- | -------------- |
+| -------------------------- | -------------- |
 | No Pit                    | 5517.529       |
 | Best 1-Stop (Brute Force) | 5160.714       |
 | Best 2-Stop (Brute Force) | 5105.736       |
 | **DQN Learned Policy**    | **5106.122**   |
 
-The deterministic learned policy is **within 0.386 seconds** of the brute-force optimal 2-stop strategy.
+The deterministic learned policy is within 0.386 seconds of the brute-force optimal 2-stop strategy.
 
----
-
-### 🚨 Safety Car Scenario
+### Safety Car Scenario
 
 | Experiment               | Mean Time (s) | Std (s) | Mean Pits | SC Rate | Pitted Under SC |
-| ------------------------ | ------------- | ------- | --------- | ------- | --------------- |
-| no_sc_train / no_sc_test | **5112.653**  | 0.000   | 2.0       | 0.00    | 0.00            |
-| sc_train / no_sc_test    | 5116.618      | 0.000   | 3.0       | 0.00    | 0.00            |
-| no_sc_train / sc_test    | 5156.085      | 34.202  | 2.0       | 0.68    | 0.20            |
-| sc_train / sc_test       | 5159.546      | 33.733  | 3.0       | 0.68    | **0.26**        |
+| ------------------------ | ------------- | ------- | --------- | ------- | ---------------- |
+| no_sc_train / no_sc_test | 5112.653      | 0.000   | 2.0       | 0.00    | 0.00              |
+| sc_train / no_sc_test    | 5116.618      | 0.000   | 3.0       | 0.00    | 0.00              |
+| no_sc_train / sc_test    | 5156.085      | 34.202  | 2.0       | 0.68    | 0.20              |
+| sc_train / sc_test       | 5159.546      | 33.733  | 3.0       | 0.68    | **0.26**          |
 
-The SC-aware policy pits under Safety Car more often, demonstrating that the agent learns to exploit reduced pit-loss windows.
+The SC-aware policy pits under Safety Car more often, showing the agent learns to exploit reduced pit-loss windows.
 
-### 📈 Algorithm Comparison
+### Algorithm Comparison
 
 | Algorithm  | Total Time (s) |
 | ---------- | -------------- |
@@ -148,25 +128,14 @@ The SC-aware policy pits under Safety Car more often, demonstrating that the age
 
 ---
 
-### 📉 Summary
+## Full Neutralisation Modelling
 
-| Method   | Performance     |
-| -------- | --------------- |
-| No Pit   | ❌ Worst        |
-| 1 Stop   | ⚠️ Suboptimal   |
-| 2 Stop   | ✅ Optimal      |
-| DQN/DDQN | 🚀 Near-optimal |
-
----
-
-## 🚨 Full Neutralisation Modelling
-
-The simulator implements the complete range of F1 race neutralisations. Each event type has distinct lap-time and pit-cost effects, and multiple events can occur in a single race.
+The simulator models the full range of F1 race neutralisations. Each event type has distinct lap-time and pit-cost effects, and multiple events can occur in a single race.
 
 ### Safety Car (SC)
 
 | Parameter              | Default             |
-| ---------------------- | ------------------- |
+| ---------------------- | -------------------- |
 | SC probability per lap | 0.03                |
 | Max SC events per race | 3                   |
 | SC duration            | 2–5 laps            |
@@ -176,7 +145,7 @@ The simulator implements the complete range of F1 race neutralisations. Each eve
 ### Virtual Safety Car (VSC)
 
 | Parameter               | Default             |
-| ----------------------- | ------------------- |
+| ------------------------ | -------------------- |
 | VSC probability per lap | 0.04                |
 | VSC duration            | 2–4 laps            |
 | Lap-time multiplier     | 1.10× (10% slower)  |
@@ -185,55 +154,55 @@ The simulator implements the complete range of F1 race neutralisations. Each eve
 ### Red Flag
 
 | Parameter                    | Default |
-| ---------------------------- | ------- |
+| ----------------------------- | ------- |
 | Red Flag probability per lap | 0.01    |
 | Neutralisation duration      | 3 laps  |
 | Free tyre change on restart  | `True`  |
 
-**Neutralisation logic:** events are mutually exclusive (`Red Flag > SC > VSC` priority). Exclusion zones apply to laps 1–4 and the final 5 laps. All three event types are included in the 19-dimensional observation vector so the agent can condition decisions on the current neutralisation state.
+Neutralisation logic: events are mutually exclusive (`Red Flag > SC > VSC` priority). Exclusion zones apply to laps 1–4 and the final 5 laps. All three event types are included in the 19-dimensional observation vector so the agent can condition decisions on the current neutralisation state.
 
 ---
 
-## 🌧️ Weather & Dynamic Track Conditions
+## Weather & Dynamic Track Conditions
 
 Weather evolves during the race via a Markov chain, introducing dry-to-wet transitions and strategic decisions on intermediate vs wet tyres.
 
 ### Weather states
 
-| State  | Description                   |
-| ------ | ----------------------------- |
-| `dry`  | Slick compounds optimal       |
-| `damp` | Intermediate compound optimal |
-| `wet`  | Full wet compound optimal     |
+| State  | Description                    |
+| ------ | -------------------------------- |
+| `dry`  | Slick compounds optimal         |
+| `damp` | Intermediate compound optimal   |
+| `wet`  | Full wet compound optimal       |
 
 ### Compound-weather penalties
 
 | Weather | Compound      | Penalty (s/lap) |
-| ------- | ------------- | --------------- |
-| dry     | INTERMEDIATE  | +3.0            |
-| dry     | WET           | +8.0            |
-| damp    | SOFT / MEDIUM | +5.0            |
-| damp    | HARD          | +6.0            |
-| wet     | SOFT / MEDIUM | +15.0           |
-| wet     | HARD          | +16.0           |
-| wet     | INTERMEDIATE  | +2.0            |
+| ------- | -------------- | ----------------- |
+| dry     | INTERMEDIATE  | +3.0              |
+| dry     | WET           | +8.0              |
+| damp    | SOFT / MEDIUM | +5.0              |
+| damp    | HARD          | +6.0              |
+| wet     | SOFT / MEDIUM | +15.0             |
+| wet     | HARD          | +16.0             |
+| wet     | INTERMEDIATE  | +2.0              |
 
 ---
 
-## 🏁 Multi-Car Opponent Model
+## Multi-Car Opponent Model
 
-The simulator models `N` rule-based opponents with varied pit strategies and skill offsets, enabling the agent to learn positional racing strategy.
+The simulator models N rule-based opponents with varied pit strategies and skill offsets, enabling the agent to learn positional racing strategy.
 
 Each opponent follows a predetermined 1-stop or 2-stop plan, randomised at reset. Lap times are computed analytically with degradation, weather penalties, skill offsets, and noise. Opponents react to the same neutralisation events as the agent. Skill offsets are sampled in `[−1.5, +1.5]` s/lap.
 
 | Situation                              | Reward effect                     |
-| -------------------------------------- | --------------------------------- |
+| ---------------------------------------- | ------------------------------------ |
 | Opponent within undercut window behind | Bonus proportional to closeness   |
 | Stuck in traffic behind opponent       | Penalty proportional to closeness |
 
 ---
 
-## 🗺️ Cross-Circuit Generalisation
+## Cross-Circuit Generalisation
 
 The simulator supports 21 real F1 circuits via built-in presets. Setting `circuit_name` in `SimConfig` automatically loads the correct parameters.
 
@@ -244,40 +213,40 @@ cfg = SimConfig(circuit_name="monaco")
 ```
 
 | Circuit     | Laps | Base lap (s) | Pit loss (s) | deg_k |
-| ----------- | ---- | ------------ | ------------ | ----- |
-| bahrain     | 57   | 95.0         | 30.0         | 42.0  |
-| jeddah      | 50   | 90.0         | 29.0         | 30.0  |
-| melbourne   | 58   | 82.0         | 33.0         | 32.0  |
-| baku        | 51   | 103.0        | 31.0         | 25.0  |
-| miami       | 57   | 91.0         | 32.0         | 38.0  |
-| **monaco**  | 78   | 74.0         | 38.0         | 14.0  |
-| barcelona   | 66   | 80.0         | 31.0         | 40.0  |
-| montreal    | 70   | 76.0         | 30.0         | 30.0  |
-| silverstone | 52   | 90.0         | 31.0         | 33.0  |
-| budapest    | 70   | 80.0         | 32.0         | 36.0  |
-| spa         | 44   | 107.0        | 30.0         | 38.0  |
-| zandvoort   | 72   | 75.0         | 33.0         | 37.0  |
-| **monza**   | 53   | 82.0         | 27.0         | 45.0  |
-| singapore   | 61   | 103.0        | 35.0         | 27.0  |
-| suzuka      | 53   | 93.0         | 32.0         | 36.0  |
-| losail      | 57   | 84.0         | 30.0         | 44.0  |
-| austin      | 56   | 96.0         | 31.0         | 39.0  |
-| mexico      | 71   | 79.0         | 30.0         | 28.0  |
-| interlagos  | 71   | 73.0         | 30.0         | 34.0  |
-| las_vegas   | 50   | 96.0         | 29.0         | 25.0  |
-| abu_dhabi   | 58   | 87.0         | 29.0         | 33.0  |
+| ----------- | ---- | ------------- | -------------- | ----- |
+| bahrain     | 57   | 95.0          | 30.0           | 42.0  |
+| jeddah      | 50   | 90.0          | 29.0           | 30.0  |
+| melbourne   | 58   | 82.0          | 33.0           | 32.0  |
+| baku        | 51   | 103.0         | 31.0           | 25.0  |
+| miami       | 57   | 91.0          | 32.0           | 38.0  |
+| monaco      | 78   | 74.0          | 38.0           | 14.0  |
+| barcelona   | 66   | 80.0          | 31.0           | 40.0  |
+| montreal    | 70   | 76.0          | 30.0           | 30.0  |
+| silverstone | 52   | 90.0          | 31.0           | 33.0  |
+| budapest    | 70   | 80.0          | 32.0           | 36.0  |
+| spa         | 44   | 107.0         | 30.0           | 38.0  |
+| zandvoort   | 72   | 75.0          | 33.0           | 37.0  |
+| monza       | 53   | 82.0          | 27.0           | 45.0  |
+| singapore   | 61   | 103.0         | 35.0           | 27.0  |
+| suzuka      | 53   | 93.0          | 32.0           | 36.0  |
+| losail      | 57   | 84.0          | 30.0           | 44.0  |
+| austin      | 56   | 96.0          | 31.0           | 39.0  |
+| mexico      | 71   | 79.0          | 30.0           | 28.0  |
+| interlagos  | 71   | 73.0          | 30.0           | 34.0  |
+| las_vegas   | 50   | 96.0          | 29.0           | 25.0  |
+| abu_dhabi   | 58   | 87.0          | 29.0           | 33.0  |
 
 `circuit_name="generic"` keeps manually specified parameters unchanged.
 
 ---
 
-## 🏗️ System Components
+## System Components
 
-### 📊 Data
+### Data
 
-Race telemetry collected using the **FastF1 API** (2023 season). Exported to CSV and processed into sequence tensors of shape `(N, T, F)`.
+Race telemetry collected using the FastF1 API (2023 season), exported to CSV and processed into sequence tensors of shape `(N, T, F)`.
 
-### 🔁 LSTM Lap-Time Model
+### LSTM Lap-Time Model
 
 ```bash
 python lstm/train_lstm.py
@@ -286,51 +255,51 @@ python lstm/predict_lstm.py
 
 A sequence model trained in PyTorch using MSE loss that predicts lap-time behaviour from tyre age and compound history. Trained on dry-weather data only. For wet-weather compounds (`INTERMEDIATE`, `WET`), the LSTM contribution is zeroed and degradation is modelled analytically.
 
-### 🏎️ Race Simulator
+### Race Simulator
 
 Multi-car environment with configurable race length, compound-specific tyre degradation, pit-loss penalties with neutralisation discounts, LSTM-based lap-time prediction, full SC / VSC / Red Flag neutralisation, dynamic weather, and a rule-based opponent model with gap tracking.
 
-### 🎮 Action Space
+### Action Space
 
-| Action | Meaning       |
-| ------ | ------------- |
-| 0      | Stay out      |
-| 1      | Pit to SOFT   |
-| 2      | Pit to MEDIUM |
-| 3      | Pit to HARD   |
-| 4      | Pit to INTER  |
-| 5      | Pit to WET    |
+| Action | Meaning        |
+| ------ | --------------- |
+| 0      | Stay out        |
+| 1      | Pit to SOFT     |
+| 2      | Pit to MEDIUM   |
+| 3      | Pit to HARD     |
+| 4      | Pit to INTER    |
+| 5      | Pit to WET      |
 
-### 📡 State Vector (19-dimensional)
+### State Vector (19-dimensional)
 
-| Index | Feature               | Description                                |
-| ----- | --------------------- | ------------------------------------------ |
-| 0     | `lap_frac`            | Current lap / total laps                   |
-| 1     | `laps_remaining_frac` | Remaining laps / total laps                |
-| 2     | `tyre_life_norm`      | Tyre age / 60 (capped)                     |
-| 3–7   | `compound_onehot`     | One-hot: SOFT, MEDIUM, HARD, INTER, WET    |
-| 8     | `last_pred`           | Latest LSTM lap-time normalised prediction |
-| 9     | `slope`               | Degradation trend                          |
-| 10    | `sc_active`           | Full Safety Car active flag                |
-| 11    | `sc_remaining_norm`   | SC laps remaining / SC max duration        |
-| 12    | `vsc_active`          | Virtual Safety Car active flag             |
-| 13    | `red_flag_active`     | Red Flag active flag                       |
-| 14–16 | `weather_onehot`      | One-hot: dry, damp, wet                    |
-| 17    | `gap_ahead_norm`      | Normalised gap to closest car ahead        |
-| 18    | `gap_behind_norm`     | Normalised gap to closest car behind       |
+| Index | Feature               | Description                                 |
+| ----- | ----------------------- | --------------------------------------------- |
+| 0     | `lap_frac`             | Current lap / total laps                      |
+| 1     | `laps_remaining_frac`  | Remaining laps / total laps                   |
+| 2     | `tyre_life_norm`       | Tyre age / 60 (capped)                        |
+| 3–7   | `compound_onehot`      | One-hot: SOFT, MEDIUM, HARD, INTER, WET       |
+| 8     | `last_pred`            | Latest LSTM lap-time normalised prediction    |
+| 9     | `slope`                | Degradation trend                             |
+| 10    | `sc_active`            | Full Safety Car active flag                   |
+| 11    | `sc_remaining_norm`    | SC laps remaining / SC max duration           |
+| 12    | `vsc_active`           | Virtual Safety Car active flag                |
+| 13    | `red_flag_active`      | Red Flag active flag                          |
+| 14–16 | `weather_onehot`       | One-hot: dry, damp, wet                       |
+| 17    | `gap_ahead_norm`       | Normalised gap to closest car ahead           |
+| 18    | `gap_behind_norm`      | Normalised gap to closest car behind          |
 
-### 🧠 Reinforcement Learning
+### Reinforcement Learning
 
 ```bash
 python -m rl.dqn_train
 python -m rl.evaluate_dqn
 ```
 
-Implements **Deep Q-Networks** and **Double Deep Q-Networks** with experience replay, target network stabilisation, epsilon-greedy exploration, reward shaping, best-model checkpointing, and seeded stochastic evaluation.
+Implements Deep Q-Networks and Double Deep Q-Networks with experience replay, target network stabilisation, epsilon-greedy exploration, reward shaping, best-model checkpointing, and seeded stochastic evaluation.
 
-> **Note on model compatibility:** the observation space expanded from 10 to 19 dimensions in the current version. Previously trained `ddqn_*.pt` models with 10-dimensional input must be retrained.
+> Note on model compatibility: the observation space expanded from 10 to 19 dimensions in the current version. Previously trained `ddqn_*.pt` models with 10-dimensional input must be retrained.
 
-### 📈 Baselines
+### Baselines
 
 ```bash
 python -m env.baselines
@@ -338,7 +307,7 @@ python -m env.baselines
 
 Brute-force search over no-pit, 1-stop legal, and 2-stop optimal strategies. The `wet_actions=True` flag extends the search to include `INTERMEDIATE` and `WET` compounds for weather-enabled scenarios.
 
-### 📊 Visualisation
+### Visualisation
 
 ```bash
 python scripts/plot_trace.py
@@ -352,17 +321,15 @@ python scripts/plot_safety_car_trace.py
 python scripts/plot_sc_sensitivity.py
 ```
 
-### 🧠 LLM Explanation
+### LLM Explanation
 
 ```bash
 python -m explain.run_explainer
 ```
 
-Structured explanation pipeline that extracts a race summary, passes it as JSON to an LLM, and constrains the explanation to strategy tokens and summary fields. Covers degradation reasoning, pit-loss trade-offs, neutralisation usage, weather-driven compound switches, and baseline comparison.
+Structured explanation pipeline that extracts a race summary, passes it as JSON to an LLM, and constrains the explanation to strategy tokens and summary fields. Covers degradation reasoning, pit-loss trade-offs, neutralisation usage, weather-driven compound switches, and baseline comparison. Falls back to a deterministic explanation if no API key is available.
 
-If no API key is available, a deterministic fallback explanation is used.
-
-### 🖥️ GUI
+### GUI
 
 ```bash
 streamlit run gui/app.py
@@ -372,48 +339,28 @@ Interactive Streamlit interface for running greedy DDQN evaluation, computing br
 
 ---
 
-## 🔬 Experiments
+## Experiments
 
-### ⚙️ Algorithm Comparison
-
+### Algorithm Comparison
 ```bash
 python scripts/run_ddqn_compare.py
 ```
 
-### 🧪 Ablation Study
-
+### Ablation Study
 ```bash
 python scripts/run_ablation.py
 python scripts/plot_ablation.py
 ```
+Tests: reward shaping removed, constraints removed, simplified environment.
 
-**Tests:**
-
-```text
-remove reward shaping
-remove constraints
-simplified environment
-```
-
-### 📉 Sensitivity Analysis
-
+### Sensitivity Analysis
 ```bash
 python scripts/run_sensitivity.py
 python scripts/plot_sensitivity.py
 ```
+Parameters: pit loss, degradation rate, stint length, reward shaping, Safety Car probability.
 
-**Parameters:**
-
-```text
-pit loss
-degradation rate
-stint length
-reward shaping
-Safety Car probability
-```
-
-### 🚨 Safety Car Comparison
-
+### Safety Car Comparison
 ```bash
 python -m scripts.run_safety_car_compare
 python -m scripts.plot_safety_car_compare
@@ -423,12 +370,12 @@ python -m scripts.plot_sc_sensitivity
 
 ---
 
-## ⚙️ Setup Instructions
+## Setup
 
-### 1. Clone the repository
+### 1. Clone
 
 ```bash
-git clone https://github.com/your-username/apexstrategy-ai.git
+git clone https://github.com/akinduwijesekera/apexstrategy-ai.git
 cd apexstrategy-ai
 ```
 
@@ -438,17 +385,8 @@ cd apexstrategy-ai
 python -m venv .venv
 ```
 
-**Mac/Linux:**
-
-```bash
-source .venv/bin/activate
-```
-
-**Windows:**
-
-```bash
-.venv\Scripts\activate
-```
+Mac/Linux: `source .venv/bin/activate`
+Windows: `.venv\Scripts\activate`
 
 ### 3. Install dependencies
 
@@ -456,15 +394,9 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Create the environment variable file
+### 4. Environment variables
 
 Create a `.env` file in the project root:
-
-```bash
-touch .env
-```
-
-Add your API key inside:
 
 ```env
 OPENAI_API_KEY=your_api_key_here
@@ -472,45 +404,19 @@ OPENAI_API_KEY=your_api_key_here
 
 If your explainer uses a different variable name, replace `OPENAI_API_KEY` accordingly.
 
-### 5. Verify your project structure
-
-```text
-apexstrategy-ai/
-├── config.py
-├── requirements.txt
-├── .env
-├── data/
-│   ├── build_lstm_dataset.py
-│   └── download_race_laps_2023.py
-├── env/
-│   ├── race_env.py
-│   ├── gym_race_env.py
-│   └── baselines.py
-├── explain/
-├── gui/
-│   └── app.py
-├── lstm/
-├── models/
-├── rl/
-│   ├── dqn_train.py
-│   └── evaluate_dqn.py
-├── scripts/
-└── utils/
-```
-
-### 6. Download race data
+### 5. Download race data
 
 ```bash
 python data/download_race_laps_2023.py
 ```
 
-### 7. Build the LSTM dataset
+### 6. Build the LSTM dataset
 
 ```bash
 python data/build_lstm_dataset.py
 ```
 
-### 8. Train the LSTM model
+### 7. Train the LSTM model
 
 ```bash
 python lstm/train_lstm.py
@@ -518,9 +424,7 @@ python lstm/train_lstm.py
 
 ---
 
-## 🖥️ Running the Full Project End-to-End
-
-Use the following order for a full reproducible run:
+## Running the full project end-to-end
 
 ```bash
 # Download raw race data
@@ -570,7 +474,7 @@ streamlit run gui/app.py
 
 ---
 
-## 📂 Repository Structure
+## Repository structure
 
 ```text
 data/
@@ -632,7 +536,7 @@ README.md
 
 ---
 
-## ⚠️ Simplifications
+## Simplifications
 
 This project intentionally simplifies several aspects of real-world Formula 1:
 
@@ -645,11 +549,11 @@ This project intentionally simplifies several aspects of real-world Formula 1:
 - No qualifying simulation
 - No historical weather replay from FastF1
 
-These simplifications make the problem tractable while preserving the core strategic decision-making challenge.
+These simplifications keep the problem tractable while preserving the core strategic decision-making challenge.
 
 ---
 
-## 🎓 Contributions
+## Contributions
 
 - LSTM-based lap-time modelling
 - Reinforcement learning strategy optimisation (DQN + DDQN)
@@ -662,22 +566,21 @@ These simplifications make the problem tractable while preserving the core strat
 - Ablation and sensitivity analysis
 - Policy and trace visualisation
 - LLM-based interpretability
-- Interactive ML deployment with Streamlit
+- Interactive deployment with Streamlit
 
 ---
 
-## 👨‍💻 Authors
+## Team
 
-**ApexStrategy AI Team**  
-UCL – Introduction to Machine Learning Coursework
+Built as part of UCL's Introduction to Machine Learning coursework.
 
 ---
 
-## 📌 Notes
+## Notes
 
-- Make sure your `.env` file is **not committed** to GitHub
+- Make sure your `.env` file is not committed to GitHub
 - Store trained models, cached data, and generated outputs in ignored directories
-- If Streamlit or the explainer fails, first check:
+- If Streamlit or the explainer fails, check:
   - all dependencies are installed
   - `.env` exists and the API key is valid
   - trained model files have been generated
@@ -686,7 +589,7 @@ UCL – Introduction to Machine Learning Coursework
 
 ---
 
-## 🔒 Recommended `.gitignore` additions
+## Recommended `.gitignore` additions
 
 ```gitignore
 .env
@@ -698,5 +601,4 @@ __pycache__/
 .ipynb_checkpoints/
 models/*.pt
 data/processed/
-```
 ```
