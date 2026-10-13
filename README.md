@@ -6,6 +6,11 @@
 ![RL](https://img.shields.io/badge/RL-DQN%20%2F%20DDQN-green.svg)
 
 ---
+---
+
+## Team
+
+Built with Faizaan Abbas, Edison Lo, and Bamidele Adelusi-Sanni.
 
 ## Overview
 
